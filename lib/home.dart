@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:futter_camera_gallery_api/Widgets/AlertBox.dart';
 import 'dart:convert';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,7 +17,7 @@ class Homepage extends State<Home> {
   final picker = ImagePicker();
   String base64Image;
   String imageName;
-  String msg = '';
+  String alertMessage = '';
   bool flag = false;
 
   // pick and crop
@@ -37,12 +38,12 @@ class Homepage extends State<Home> {
       compressFormat: ImageCompressFormat.jpg,
       androidUiSettings: AndroidUiSettings(
         toolbarColor: Colors.white,
-        toolbarTitle: "zahid cropper",
+        toolbarTitle: "Flutter Cropper",
       ),
     );
 
     setState(() {
-      msg = '';
+      alertMessage = '';
       _imageFile = val ?? _imageFile;
     });
     print("cropper ${val.runtimeType}");
@@ -62,14 +63,14 @@ class Homepage extends State<Home> {
         var result = jsonDecode(res.body);
         print(result);
         setState(() {
-          msg = result['message'];
+          alertMessage = result['message'];
         });
       }).catchError((onError) => setState(() {
-            msg = 'Error uploading the image';
+            alertMessage = 'Error uploading the image';
           }));
     } else {
       setState(() {
-        msg = 'Select An Image First';
+        alertMessage = 'Select An Image First';
       });
     }
   }
@@ -79,20 +80,23 @@ class Homepage extends State<Home> {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.only(top: 50),
+          margin: EdgeInsets.only(top: 150),
           child: Center(
             child: Container(
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 20),
                     child: InkWell(
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(200),
                           child: Column(
                             children: [
                               if (_imageFile != null) ...[
-                                Image.file(_imageFile, height: 200, width: 200)
+                                Image.file(
+                                  _imageFile,
+                                  height: 200,
+                                  width: 200,
+                                )
                               ] else ...[
                                 Image.network(
                                   'https://i.pinimg.com/originals/d7/7e/2c/d77e2cc708655672d9313f87689c9cb2.gif',
@@ -168,7 +172,7 @@ class Homepage extends State<Home> {
                                 shadowColor: Colors.blueAccent),
                             onPressed: () {
                               setState(() {
-                                msg = '';
+                                alertMessage = '';
                                 _imageFile = null;
                               });
                             },
@@ -192,12 +196,9 @@ class Homepage extends State<Home> {
                           ))
                     ],
                   ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 20),
-                    child: Text(msg != '' ? '$msg' : '',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500)),
-                  )
+                  alertMessage != ''
+                      ? Center(child: AlertBox(message: alertMessage))
+                      : Container()
                 ],
               ),
             ),

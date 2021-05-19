@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:futter_camera_gallery_api/Widgets/MyAppBar.dart';
 import 'package:futter_camera_gallery_api/home.dart';
 
 void main() {
@@ -32,9 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: MyAppBar(),
       body: Home(),
     );
   }
