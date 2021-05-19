@@ -33,6 +33,10 @@ class Homepage extends State<Home> {
       source: source,
     );
 
+    if (pickedFile == null) {
+      return;
+    }
+
     final file = File(pickedFile.path);
     final jpg = ImageSizeGetter.isJpg(FileInput(file));
     final webp = ImageSizeGetter.isWebp(FileInput(file));
@@ -59,28 +63,28 @@ class Homepage extends State<Home> {
           toolbarTitle: "Flutter Cropper",
         ),
       );
+      int imgSize = (croppedImage.lengthSync() / 1024).round();
 
       setState(() {
         alertMessage = '';
         imageFile = croppedImage ?? imageFile;
-        imageSize = (imageFile.lengthSync() / 1024).round();
+        imageSize = imgSize;
         imageType = type;
       });
+
+      if (imgSize > 200) {
+        setState(() {
+          alertMessage =
+              'Image Size is greater then 200kb please compress the Image';
+        });
+      } else {
+        alertMessage = '';
+      }
     } else {
       setState(() {
         alertMessage = 'Only jpg, webp and gif images are alowed';
         imageType = type;
       });
-    }
-
-    int imgSize = (croppedImage.lengthSync() / 1024).round();
-    if (imgSize > 200) {
-      setState(() {
-        alertMessage =
-            'Image Size is greater then 400kb please compress the Image';
-      });
-    } else {
-      alertMessage = '';
     }
   }
 
@@ -111,6 +115,12 @@ class Homepage extends State<Home> {
 
   // Compress image
   Future compressAndGetFile() async {
+    if (imageFile == null) {
+      setState(() {
+        alertMessage = 'Select An Image First';
+      });
+      return;
+    }
     final filePath = imageFile.absolute.path;
     final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
     final splitted = filePath.substring(0, (lastIndex));
@@ -130,7 +140,7 @@ class Homepage extends State<Home> {
     if (imgSize > 200) {
       setState(() {
         alertMessage =
-            'Image Size is greater then 400kb please compress the Image';
+            'Image Size is greater then 200kb please compress the Image';
       });
     } else {
       alertMessage = '';
@@ -189,7 +199,7 @@ class Homepage extends State<Home> {
                               title: Text(
                                 'Choose an option',
                                 style: TextStyle(
-                                  fontSize: 30,
+                                  fontSize: 20,
                                 ),
                               ),
                               content: Text('Camera or Gallery'),
@@ -205,7 +215,7 @@ class Homepage extends State<Home> {
                                   },
                                   child: Icon(
                                     Icons.photo_camera,
-                                    size: 20,
+                                    size: 22,
                                   ),
                                 ),
                                 TextButton(
@@ -219,7 +229,7 @@ class Homepage extends State<Home> {
                                   },
                                   child: Icon(
                                     Icons.image,
-                                    size: 20,
+                                    size: 22,
                                   ),
                                 ),
                               ],
