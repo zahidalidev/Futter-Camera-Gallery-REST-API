@@ -19,6 +19,7 @@ class Homepage extends State<Home> {
   final picker = ImagePicker();
   String base64Image;
   String imageName;
+  String imageType = '';
   String alertMessage = '';
   int imageSize = 0;
   bool flag = false;
@@ -32,33 +33,54 @@ class Homepage extends State<Home> {
       source: source,
     );
 
-    croppedImage = await ImageCropper.cropImage(
-      sourcePath: pickedFile.path,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-      compressQuality: 100,
-      maxHeight: 700,
-      maxWidth: 700,
-      compressFormat: ImageCompressFormat.jpg,
-      androidUiSettings: AndroidUiSettings(
-        toolbarColor: Colors.white,
-        toolbarTitle: "Flutter Cropper",
-      ),
-    );
+    final file = File(pickedFile.path);
+    final jpg = ImageSizeGetter.isJpg(FileInput(file));
+    final webp = ImageSizeGetter.isWebp(FileInput(file));
+    final gif = ImageSizeGetter.isGif(FileInput(file));
 
-    final jpg = ImageSizeGetter.isJpg(FileInput(croppedImage));
-    final webp = ImageSizeGetter.isWebp(FileInput(croppedImage));
-    final gif = ImageSizeGetter.isGif(FileInput(croppedImage));
+    String type = jpg
+        ? 'jpg'
+        : webp
+            ? "webp"
+            : gif
+                ? 'gif'
+                : 'png';
 
     if (jpg || webp || gif) {
+      croppedImage = await ImageCropper.cropImage(
+        sourcePath: pickedFile.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+        compressQuality: 100,
+        maxHeight: 700,
+        maxWidth: 700,
+        compressFormat: ImageCompressFormat.jpg,
+        androidUiSettings: AndroidUiSettings(
+          toolbarColor: Colors.white,
+          toolbarTitle: "Flutter Cropper",
+        ),
+      );
+
       setState(() {
         alertMessage = '';
         imageFile = croppedImage ?? imageFile;
         imageSize = (imageFile.lengthSync() / 1024).round();
+        imageType = type;
       });
     } else {
       setState(() {
         alertMessage = 'Only jpg, webp and gif images are alowed';
+        imageType = type;
       });
+    }
+
+    int imgSize = (croppedImage.lengthSync() / 1024).round();
+    if (imgSize > 200) {
+      setState(() {
+        alertMessage =
+            'Image Size is greater then 400kb please compress the Image';
+      });
+    } else {
+      alertMessage = '';
     }
   }
 
@@ -99,12 +121,20 @@ class Homepage extends State<Home> {
       quality: 1,
     );
 
-    final size = ImageSizeGetter.getSize(FileInput(imageFile));
     setState(() {
       imageFile = result;
       imageSize = (result.lengthSync() / 1024).round();
     });
-    // print(properties.height);
+
+    int imgSize = (result.lengthSync() / 1024).round();
+    if (imgSize > 200) {
+      setState(() {
+        alertMessage =
+            'Image Size is greater then 400kb please compress the Image';
+      });
+    } else {
+      alertMessage = '';
+    }
   }
 
   @override
@@ -118,12 +148,17 @@ class Homepage extends State<Home> {
               child: Column(
                 children: [
                   Container(
+                    width: 300,
                     margin: EdgeInsets.only(bottom: 20),
-                    child: Text(alertMessage != '' ? '* $alertMessage' : '',
+                    child: Container(
+                      child: Text(
+                        alertMessage != '' ? '* $alertMessage' : '',
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
-                            color: Colors.red)),
+                            color: Colors.red),
+                      ),
+                    ),
                   ),
                   Container(
                     child: InkWell(
@@ -207,10 +242,7 @@ class Homepage extends State<Home> {
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 20),
-                    child: Text(
-                        imageSize != 0
-                            ? 'Image Type: ${imageSize.toString()} kb'
-                            : '',
+                    child: Text(imageType != '' ? 'Image Type: $imageType' : '',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -234,6 +266,8 @@ class Homepage extends State<Home> {
                           onPressed: () {
                             setState(() {
                               alertMessage = '';
+                              imageSize = 0;
+                              imageType = '';
                               imageFile = null;
                             });
                           },
