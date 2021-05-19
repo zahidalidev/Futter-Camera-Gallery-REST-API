@@ -37,6 +37,9 @@ dev_dependencies:
   image_picker: ^0.7.5
   http: ^0.13.3
   image_cropper: ^1.4.0
+  flutter_image_compress: ^1.0.0-nullsafety
+  flutter_native_image: ^0.0.5
+  image_size_getter: ^1.0.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
