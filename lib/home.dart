@@ -13,7 +13,6 @@ class Home extends StatefulWidget {
 
 class Homepage extends State<Home> {
   File _imageFile;
-  String _imageFile2;
   final picker = ImagePicker();
   String base64Image;
   String imageName;
@@ -21,8 +20,7 @@ class Homepage extends State<Home> {
   bool flag = false;
 
   // pick and crop
-  onImageButtonPressed(ImageSource source,
-      {BuildContext context, capturedImageFile}) async {
+  onImageButtonPressed(ImageSource source, {BuildContext context}) async {
     final ImagePicker _picker = ImagePicker();
     File val;
 
@@ -49,7 +47,6 @@ class Homepage extends State<Home> {
     });
     print("cropper ${val.runtimeType}");
     print(val);
-    capturedImageFile(val.path);
   }
 
   // sending image to server
@@ -123,11 +120,6 @@ class Homepage extends State<Home> {
                                     onImageButtonPressed(
                                       ImageSource.camera,
                                       context: context,
-                                      capturedImageFile: (s) {
-                                        setState(() {
-                                          _imageFile2 = s;
-                                        });
-                                      },
                                     );
                                     // await _pickImage(ImageSource.camera);
                                     Navigator.pop(context);
@@ -142,11 +134,6 @@ class Homepage extends State<Home> {
                                     onImageButtonPressed(
                                       ImageSource.gallery,
                                       context: context,
-                                      capturedImageFile: (s) {
-                                        setState(() {
-                                          _imageFile2 = s;
-                                        });
-                                      },
                                     );
                                     // await _pickImage(ImageSource.gallery);
                                     Navigator.pop(context);
@@ -164,6 +151,7 @@ class Homepage extends State<Home> {
                     ),
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
                           width: 100,
@@ -184,26 +172,6 @@ class Homepage extends State<Home> {
                                 msg = '';
                                 _imageFile = null;
                               });
-                            },
-                          )),
-                      Container(
-                          width: 80,
-                          margin:
-                              EdgeInsets.only(left: 10, top: 20, bottom: 20),
-                          child: ElevatedButton(
-                            child: Text(
-                              'Crop',
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.blueAccent[700],
-                                onPrimary: Colors.white,
-                                elevation: 3,
-                                shadowColor: Colors.blueAccent),
-                            onPressed: () async {
-                              // await _cropImage();
                             },
                           )),
                       Container(
