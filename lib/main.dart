@@ -9,11 +9,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Gallery & REST API Integration',
+      title: 'Camera, Gallery, Crop, Compress, Constraint, API',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
       ),
-      home: MyHomePage(title: 'Camera, Gallery & REST API Integration'),
+      home:
+          MyHomePage(title: 'Camera, Gallery, Crop, Compress, Constraint, API'),
     );
   }
 }

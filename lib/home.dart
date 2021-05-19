@@ -95,7 +95,7 @@ class Homepage extends State<Home> {
                                 Image.file(_imageFile, height: 200, width: 200)
                               ] else ...[
                                 Image.network(
-                                  'https://i.pinimg.com/originals/bc/aa/d0/bcaad00d4bf16fd94bc45665ddad18e9.jpg',
+                                  'https://i.pinimg.com/originals/d7/7e/2c/d77e2cc708655672d9313f87689c9cb2.gif',
                                   height: 200,
                                   width: 200,
                                 ),
@@ -163,7 +163,6 @@ class Homepage extends State<Home> {
                                   fontSize: 20,
                                 )),
                             style: ElevatedButton.styleFrom(
-                                primary: Colors.blueAccent[700],
                                 onPrimary: Colors.white,
                                 elevation: 3,
                                 shadowColor: Colors.blueAccent),
@@ -184,7 +183,6 @@ class Homepage extends State<Home> {
                                   fontSize: 20,
                                 )),
                             style: ElevatedButton.styleFrom(
-                                primary: Colors.blueAccent[700],
                                 onPrimary: Colors.white,
                                 elevation: 3,
                                 shadowColor: Colors.blueAccent),
